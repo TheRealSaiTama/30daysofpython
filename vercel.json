@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/subscribe",
-      "dest": "/api/subscribe"
+      "source": "/api/subscribe",
+      "destination": "/api/subscribe"
     },
     {
-      "src": "/api/process-daily-tips",
-      "dest": "/api/process-daily-tips"
+      "source": "/api/process-daily-tips",
+      "destination": "/api/process-daily-tips"
     }
   ],
   "functions": {
