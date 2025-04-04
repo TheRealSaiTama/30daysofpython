@@ -6,8 +6,13 @@
     },
     {
       "src": "/api/process-daily-tips",
-      "schedule": "0 8 * * *",
       "dest": "/src/api/process-daily-tips.ts"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/process-daily-tips",
+      "schedule": "0 8 * * *"
     }
   ],
   "headers": [
