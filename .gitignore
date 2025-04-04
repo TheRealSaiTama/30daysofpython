@@ -1,0 +1,69 @@
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Distribution / packaging
+*.tar.gz
+*.tgz
+*.whl
+*.zip
+*.rar
+
+# Environment files
+.env
+sendgrid.env
+*.env
+.venv
+env/
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.vs/
+*.swp
+*.swo
+*~
+
+# Logs and debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+debug/
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+profile_default/
+ipython_config.py
+
