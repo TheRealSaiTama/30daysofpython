@@ -44,6 +44,33 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ className }) => {
     setIsSubmitting(true);
 
     try {
+      console.log(`Attempting to subscribe with email: ${email}`);
+
+      // Create a text response handler in case JSON parsing fails
+      const handleTextResponse = async (response: Response) => {
+        const text = await response.text();
+        console.log("Raw response:", text);
+        
+        // Try to parse as JSON if it looks like JSON
+        if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            console.error("Failed to parse JSON-like response:", e);
+            return { success: false, message: "Invalid response from server" };
+          }
+        }
+        
+        // Not JSON, return a simple object
+        return { 
+          success: false, 
+          message: "Server returned non-JSON response",
+          status: response.status,
+          statusText: response.statusText,
+          responsePreview: text.slice(0, 100) + (text.length > 100 ? '...' : '')
+        };
+      };
+
       const response = await fetch("/api/subscribe", {
         method: "POST",
         headers: {
@@ -52,37 +79,20 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ className }) => {
         body: JSON.stringify({ email }),
       });
 
-      // First check if the response is OK before trying to parse JSON
+      console.log(`Response status: ${response.status} ${response.statusText}`);
+      console.log("Response headers:", Object.fromEntries([...response.headers.entries()]));
+
+      const data = await handleTextResponse(response);
+      
       if (!response.ok) {
-        // Try to parse as JSON, but handle non-JSON responses gracefully
-        let errorMessage = "Failed to subscribe";
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.message) {
-            errorMessage = errorData.message;
-          }
-        } catch (jsonError) {
-          // If response is not valid JSON, use the status text
-          console.error("Error parsing JSON response:", jsonError);
-          errorMessage = `Server error (${response.status}): ${response.statusText || "Unknown error"}`;
-        }
-        throw new Error(errorMessage);
+        throw new Error(data.message || `Server error: ${response.status}`);
       }
 
-      // Try to parse the successful response
-      let successMessage = "Thank you for subscribing!";
-      let description = "Check your email for the welcome message.";
-      try {
-        const data = await response.json();
-        if (data && data.message) {
-          successMessage = "Thank you for subscribing!";
-          description = data.message;
-        }
-      } catch (jsonError) {
-        console.warn("Could not parse success response as JSON:", jsonError);
-      }
+      console.log("Subscription successful:", data);
+      toast.success("Thank you for subscribing!", {
+        description: data.message || "Check your email for the welcome message.",
+      });
 
-      toast.success(successMessage, { description });
       setEmail("");
     } catch (error) {
       console.error("Subscription error:", error);
