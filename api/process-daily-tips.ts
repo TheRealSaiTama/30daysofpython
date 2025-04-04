@@ -3,31 +3,59 @@ import admin from "firebase-admin";
 import sgMail from "@sendgrid/mail";
 import { getDailyTipContent } from "./utils";
 
-// Initialize Firebase if it hasn't been initialized
-try {
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-      }),
-    });
+// Properly handle Firebase initialization
+const initializeFirebase = () => {
+  try {
+    if (!admin.apps.length) {
+      // Check if environment variables are present
+      const projectId = process.env.FIREBASE_PROJECT_ID;
+      const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+      let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+      
+      console.log(`Project ID: ${projectId ? 'Found' : 'Missing'}`);
+      console.log(`Client Email: ${clientEmail ? 'Found' : 'Missing'}`);
+      console.log(`Private Key: ${privateKey ? 'Found' : 'Missing'}`);
+      
+      // Handle private key with special care - it may have quotes or need replacements
+      if (privateKey) {
+        // If the key has quotes, remove them
+        if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+          privateKey = privateKey.slice(1, -1);
+        }
+        
+        // Replace literal \n with actual newlines
+        privateKey = privateKey.replace(/\\n/g, '\n');
+      }
+      
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId,
+          clientEmail,
+          privateKey,
+        }),
+      });
+      
+      return true;
+    }
+    return true;
+  } catch (error) {
+    console.error("Firebase admin initialization error:", error);
+    return false;
   }
-} catch (error) {
-  console.error("Firebase admin initialization error:", error);
-}
+};
 
-const db = admin.firestore();
-
-// Configure SendGrid
-const SENDGRID_API_KEY = process.env.VITE_SENDGRID_API_KEY || "";
-if (SENDGRID_API_KEY) {
-  sgMail.setApiKey(SENDGRID_API_KEY);
-  console.log("SendGrid API Key configured successfully");
-} else {
-  console.warn("SendGrid API Key is missing!");
-}
+// Initialize SendGrid
+const initializeSendGrid = () => {
+  const apiKey = process.env.VITE_SENDGRID_API_KEY || process.env.SENDGRID_API_KEY;
+  if (apiKey) {
+    sgMail.setApiKey(apiKey);
+    console.log("SendGrid API key found and configured");
+    return true;
+  } else {
+    console.warn("SendGrid API key is missing");
+    return false;
+  }
+};
 
 export default async function handler(
   req: VercelRequest,
@@ -51,6 +79,24 @@ export default async function handler(
   }
   
   try {
+    // Initialize Firebase and SendGrid
+    const firebaseInitialized = initializeFirebase();
+    const sendgridInitialized = initializeSendGrid();
+    
+    if (!firebaseInitialized) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to initialize Firebase",
+      });
+    }
+
+    if (!sendgridInitialized) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to initialize email service",
+      });
+    }
+    
     // Check for API key in both request body and headers for flexibility
     const apiKey = req.body?.apiKey || req.headers['x-api-key'];
     
@@ -61,6 +107,8 @@ export default async function handler(
         message: "Unauthorized. Invalid or missing API key.",
       });
     }
+
+    const db = admin.firestore();
 
     // Get active subscribers who are due for an email
     const now = new Date();
