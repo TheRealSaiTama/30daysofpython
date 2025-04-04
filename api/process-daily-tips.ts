@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import admin from "firebase-admin";
 import sgMail from "@sendgrid/mail";
-import { getDailyTipContent } from "../src/lib/daily-tips-content";
+import { getDailyTipContent } from "./utils";
 
 // Initialize Firebase if it hasn't been initialized
 try {
