@@ -1,0 +1,191 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 10%;
+    --foreground: 60 30% 96%;
+
+    --card: 220 20% 15%;
+    --card-foreground: 60 30% 96%;
+
+    --popover: 220 20% 15%;
+    --popover-foreground: 60 30% 96%;
+
+    --primary: 142 72% 50%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 58 95% 70%;
+    --secondary-foreground: 220 20% 10%;
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 60 20% 80%;
+
+    --accent: 142 50% 40%;
+    --accent-foreground: 60 30% 96%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 30% 96%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 142 72% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-[Inter];
+    background: radial-gradient(circle at center, rgba(10, 20, 30, 0.7), rgba(5, 15, 25, 0.95)), 
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2350FA7B' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(10, 20, 30, 0.97), rgba(20, 30, 40, 0.95));
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-[Poppins] font-semibold;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    width: 70vw;
+    height: 70vh;
+    background: radial-gradient(circle, rgba(80, 250, 123, 0.1) 0%, rgba(240, 240, 100, 0.05) 40%, transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+
+  @keyframes pulse-bg {
+    0%, 100% { opacity: 0.03; }
+    50% { opacity: 0.08; }
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 20px 20px;
+    background-image: 
+      radial-gradient(rgba(80, 250, 123, 0.2) 1px, transparent 1px),
+      radial-gradient(rgba(240, 240, 100, 0.15) 1px, transparent 1px);
+    background-position: 0 0, 10px 10px;
+    z-index: -2;
+    animation: pulse-bg 10s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0.05;
+  }
+}
+
+@layer utilities {
+  .python-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+  
+  .glass-card {
+    @apply bg-black/20 backdrop-blur-lg border border-white/10 shadow-lg rounded-xl;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .neo-glow {
+    box-shadow: 0 0 15px rgba(80, 250, 123, 0.5), 0 0 30px rgba(240, 240, 100, 0.3);
+  }
+  
+  .python-input {
+    @apply bg-black/30 border-white/10 backdrop-blur-md text-white rounded-xl focus:ring-primary/50 focus:border-primary/50;
+  }
+  
+  .neo-morphism {
+    @apply bg-black/30 border border-white/10 rounded-xl;
+    box-shadow: 
+      inset 2px 2px 4px rgba(255, 255, 255, 0.05),
+      8px 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .floating {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(2deg);
+    }
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+  }
+  
+  .python-3d-shadow {
+    text-shadow: 
+      0px 2px 0px rgba(80, 250, 123, 0.5),
+      2px 4px 0px rgba(240, 240, 100, 0.3);
+  }
+  
+  .python-3d-logo {
+    filter: drop-shadow(0 0 12px rgba(80, 250, 123, 0.7)) 
+            drop-shadow(0 0 24px rgba(240, 240, 100, 0.4));
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* New utilities for enhanced design */
+  .cosmic-glow {
+    filter: drop-shadow(0 0 8px rgba(80, 250, 123, 0.8)) 
+            drop-shadow(0 0 16px rgba(240, 240, 100, 0.5))
+            drop-shadow(0 0 32px rgba(80, 250, 123, 0.3));
+  }
+
+  .header-blur {
+    @apply backdrop-blur-md bg-gradient-to-r from-black/40 via-black/50 to-black/40 border-b border-white/5;
+  }
+
+  .surreal-text {
+    @apply bg-gradient-to-br from-white via-green-200 to-yellow-100 bg-clip-text text-transparent;
+    text-shadow: 0 0 20px rgba(80, 250, 123, 0.4);
+  }
+  
+  .matrix-bg {
+    position: relative;
+  }
+  
+  .matrix-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='10' y='20' font-family='monospace' font-size='10' fill='%2350FA7B10'%3E01%3C/text%3E%3Ctext x='30' y='40' font-family='monospace' font-size='10' fill='%2350FA7B10'%3E10%3C/text%3E%3Ctext x='20' y='50' font-family='monospace' font-size='10' fill='%2350FA7B10'%3E01%3C/text%3E%3Ctext x='40' y='15' font-family='monospace' font-size='10' fill='%2350FA7B10'%3E10%3C/text%3E%3C/svg%3E");
+    opacity: 0.1;
+    z-index: -1;
+  }
+
+  .glass-button {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:bg-white/20 transition-all duration-300;
+  }
+}

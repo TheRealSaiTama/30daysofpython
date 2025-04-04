@@ -1,0 +1,19 @@
+{
+  "crons": [
+    {
+      "path": "/api/process-daily-tips",
+      "schedule": "0 8 * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/process-daily-tips",
+      "headers": [
+        {
+          "key": "x-api-key",
+          "value": "${ADMIN_API_KEY}"
+        }
+      ]
+    }
+  ]
+}
