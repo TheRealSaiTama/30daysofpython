@@ -1,11 +1,12 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import admin from "firebase-admin";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { initializeApp, cert, getApps } from 'firebase-admin/app';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import sgMail from "@sendgrid/mail";
 
 // Properly handle Firebase initialization
 const initializeFirebase = () => {
   try {
-    if (!admin.apps.length) {
+    if (!getApps().length) {
       // Check if environment variables are present
       const projectId = process.env.FIREBASE_PROJECT_ID;
       const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
@@ -26,8 +27,8 @@ const initializeFirebase = () => {
         privateKey = privateKey.replace(/\\n/g, '\n');
       }
       
-      admin.initializeApp({
-        credential: admin.credential.cert({
+      initializeApp({
+        credential: cert({
           projectId,
           clientEmail,
           privateKey,
@@ -109,7 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
     
-    const db = admin.firestore();
+    const db = getFirestore();
     
     // Check if email already exists
     const existingSubscriber = await db
@@ -131,7 +132,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await db.collection("subscribers").add({
       email,
-      subscriptionDate: admin.firestore.FieldValue.serverTimestamp(),
+      subscriptionDate: FieldValue.serverTimestamp(),
       isActive: true,
       currentDay: 0,
       nextEmailDate: nextEmailDate,
