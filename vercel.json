@@ -1,8 +1,13 @@
 {
-  "crons": [
+  "routes": [
     {
-      "path": "/api/process-daily-tips",
-      "schedule": "0 8 * * *"
+      "src": "/api/subscribe",
+      "dest": "/src/api/subscribe.ts"
+    },
+    {
+      "src": "/api/process-daily-tips",
+      "schedule": "0 8 * * *",
+      "dest": "/src/api/process-daily-tips.ts"
     }
   ],
   "headers": [
