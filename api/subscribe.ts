@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import sgMail from "@sendgrid/mail";
+import { getApp, getApps, initializeApp, applicationDefault, cert } from 'firebase-admin/app';
+import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
+import sgMail from '@sendgrid/mail';
 
 // Properly handle Firebase initialization
 const initializeFirebase = () => {
